@@ -6,7 +6,7 @@ const admin = Kafka.AdminClient.create({
 
 const newTopic = {
     topic: 'test-topic',
-    num_partitions: 1,
+    num_partitions: 2,
     replication_factor: 1
 }
 
