@@ -2,11 +2,9 @@ const Kafka = require('node-rdkafka');
 
 const admin = Kafka.AdminClient.create({
     'bootstrap.servers': 'localhost:9091,localhost:9092,localhost:9093',
-    'broker.version.fallback': '0.10.2.1',
-    'log.connection.close' : false
 });
 
-const topicName = 'cool-topic-4';
+const topicName = 'cool-topic-1000';
 
 const newTopic = {
     topic: topicName,
@@ -25,6 +23,33 @@ admin.createTopic(newTopic, (err) => {
             console.log("topic created: ", topicName);
     }
 );
+
+// create consumer client
+const consumer = new Kafka.KafkaConsumer({
+    'group.id': 'kafka',
+    'metadata.broker.list': 'localhost:9091,localhost:9092,localhost:9093',
+}, {'auto.offset.reset': 'earliest'});
+
+consumer.on('ready', (arg) => {
+    console.log('consumer ready.' + JSON.stringify(arg));
+    consumer.subscribe([topicName])
+    //start consuming messages
+    consumer.consume();
+
+    consumer.getMetadata({
+        topic: topicName,
+        timout: 1000
+    }, (err, metadata) => {
+        if (err) {
+            console.error('Error getting metadata');
+            console.error(err);
+        } else {
+            console.log('Metadata', metadata);
+        }
+    });
+});
+// get all topics
+consumer.connect();
 
 // metadata:  {
 //     orig_broker_id: 2,
