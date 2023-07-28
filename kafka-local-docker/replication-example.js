@@ -2,9 +2,11 @@ const Kafka = require('node-rdkafka');
 
 const admin = Kafka.AdminClient.create({
     'bootstrap.servers': 'localhost:9091,localhost:9092,localhost:9093',
+    'broker.version.fallback': '0.10.2.1',
+    'log.connection.close' : false
 });
 
-const topicName = 'cool-topic';
+const topicName = 'cool-topic-4';
 
 const newTopic = {
     topic: topicName,
@@ -19,32 +21,10 @@ const newTopic = {
 admin.createTopic(newTopic, (err) => {
         if (err)
             console.log("error creating topic: ", err);
+        else
+            console.log("topic created: ", topicName);
     }
 );
-
-
-// create a consumer and read metadata
-const consumer = new Kafka.KafkaConsumer({
-    'group.id': 'kafka',
-    'metadata.broker.list': 'localhost:9091,localhost:9092,localhost:9093',
-}, {});
-
-consumer.connect();
-
-consumer.on('ready', () => {
-    consumer.getMetadata({
-        timeout: 10000
-    }, (err, metadata) => {
-        if (err) {
-            console.log("error getting metadata: ", err);
-        } else {
-            console.log("metadata: ", metadata);
-            // get partitions for topic
-            const partitions = metadata.topics.find(t => t.name === topicName).partitions;
-            console.log("partitions: ", partitions);
-        }
-    });
-});
 
 // metadata:  {
 //     orig_broker_id: 2,
