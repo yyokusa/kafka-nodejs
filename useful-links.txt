@@ -4,6 +4,9 @@ Batch Processing
 Batch Processing vs Streams
 - https://www.confluent.io/learn/batch-vs-real-time-data-processing/#batch-vs-streams
 
+Message Brokers
+- https://www.vmware.com/topics/glossary/content/message-brokers.html
+
 Event Streaming
 - https://kafka.apache.org/intro
 
